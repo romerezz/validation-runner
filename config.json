@@ -1,0 +1,4 @@
+{
+    "environment": "staging",
+    "max_retries": 3
+}
