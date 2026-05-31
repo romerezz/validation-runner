@@ -1,7 +1,7 @@
 import json
 from src.errors import ValidationError
 
-def load_config():
+def load_config() -> dict:
     try:
         with open("config.json", "r") as file:
             return json.load(file)
