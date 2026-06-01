@@ -9,9 +9,10 @@ class TestStatus(Enum):
 
 @dataclass
 class TestRun:
-    test_name: str
-    status: TestStatus
-    environment: str
+    id: int
+    name: str
+    test_type: str
+    status: TestStatus = TestStatus.PENDING
 
     def is_finished(self) -> bool:
         return self.status in [TestStatus.PASSED, TestStatus.FAILED]

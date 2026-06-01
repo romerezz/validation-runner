@@ -1,9 +1,16 @@
-from src.models import TestRun
+from src.models import TestRun, TestStatus
 
-test_runs: list[TestRun] = []
+class TestRunStore:
+    def __init__(self) -> None:
+        self.test_runs: dict[int, TestRun] = {}
+        self.next_id: int = 1
 
-def save_test_run(test_run: TestRun) -> None:
-    test_runs.append(test_run)
+    def add_test_run(self, name: str, test_type: str) -> TestRun:
+        test_run = TestRun(self.next_id, name, test_type)
+        self.test_runs[test_run.id] = test_run
+        self.next_id += 1
+        return test_run
 
-def get_test_runs() -> list[TestRun]:
-    return test_runs   
+    def get_test_run(self, test_run_id: int) -> TestRun:
+        return self.test_runs[test_run_id]
+
