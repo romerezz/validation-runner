@@ -18,9 +18,9 @@ def test_failed_to_running_is_invalid() -> None:
     with pytest.raises(RuntimeError):
         validate_status_transition(TestStatus.FAILED, TestStatus.RUNNING)
 
-def test_cancelled_to_running_is_invalid() -> None:
+def test_pending_to_cancelled_is_valid() -> None:
     validate_status_transition(TestStatus.PENDING, TestStatus.CANCELLED)
 
-def test_cancelled_to_running_is_valid() -> None:
+def test_cancelled_to_running_is_invalid() -> None:
         with pytest.raises(RuntimeError):
             validate_status_transition(TestStatus.CANCELLED, TestStatus.RUNNING)

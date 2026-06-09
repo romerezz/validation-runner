@@ -3,16 +3,18 @@ from src.models import TestStatus, TestRun
 from src.store import TestRunStore
 from src.runner import create_test_run, run_test, cancel_test
 
-def test_run_passes() -> None:
-    store = TestRunStore()
+@pytest.fixture
+def store() -> TestRunStore:
+    return TestRunStore()
+
+def test_run_passes(store: TestRunStore) -> None:
     test_run = create_test_run("login test", "functional", store)
 
     result = run_test(test_run.id, True, store)
 
     assert result.status == TestStatus.PASSED
 
-def test_run_finished_cannot_run_again() -> None:
-    store = TestRunStore()
+def test_run_finished_cannot_run_again(store: TestRunStore) -> None:
     test_run = create_test_run("login test", "functional", store)
 
     run_test(test_run.id, True, store)
@@ -20,18 +22,24 @@ def test_run_finished_cannot_run_again() -> None:
     with pytest.raises(RuntimeError):
         run_test(test_run.id, True, store)
     
-def test_cancel_pending_test_run() -> None:
-    store = TestRunStore()
+def test_cancel_pending_test_run(store: TestRunStore) -> None:
     test_run = create_test_run("login test", "functional", store)
     cancelled_test_run = cancel_test(test_run.id, store)
 
     assert cancelled_test_run.status == TestStatus.CANCELLED
 
-def test_cannot_cancel_passed_test_run() -> None:
-    store = TestRunStore()
+def test_cannot_cancel_passed_test_run(store: TestRunStore) -> None:
     test_run = create_test_run("login test", "functional", store)
     run_test(test_run.id, True, store)
 
     with pytest.raises(RuntimeError):
         cancel_test(test_run.id, store)
+
+def test_get_test_run_returns_created_test_run(store):
+    test_run = create_test_run("memory test", "memory", store)
     
+    assert test_run == store.get_test_run(test_run.id)
+
+def test_get_missing_test_run_raises_error(store):
+    with pytest.raises(KeyError):
+        store.get_test_run(999)
