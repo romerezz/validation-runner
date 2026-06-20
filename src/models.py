@@ -16,7 +16,7 @@ class TestRun:
     status: TestStatus = TestStatus.PENDING
 
     def is_finished(self) -> bool:
-        return self.status in [TestStatus.PASSED, TestStatus.FAILED]
+        return self.status in (TestStatus.PASSED, TestStatus.FAILED, TestStatus.CANCELLED)
     
 allowed_transitions = {
     TestStatus.PENDING: [TestStatus.RUNNING, TestStatus.CANCELLED],

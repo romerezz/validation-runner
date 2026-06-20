@@ -35,11 +35,15 @@ def test_cannot_cancel_passed_test_run(store: TestRunStore) -> None:
     with pytest.raises(RuntimeError):
         cancel_test(test_run.id, store)
 
-def test_get_test_run_returns_created_test_run(store):
+def test_get_test_run_returns_created_test_run(store: TestRunStore):
     test_run = create_test_run("memory test", "memory", store)
     
     assert test_run == store.get_test_run(test_run.id)
 
-def test_get_missing_test_run_raises_error(store):
+def test_get_missing_test_run_raises_error(store: TestRunStore):
     with pytest.raises(KeyError):
         store.get_test_run(999)
+
+def test_run_missing_test_run_raises_error(store: TestRunStore):
+    with pytest.raises(KeyError):
+        run_test(999, True, store)
