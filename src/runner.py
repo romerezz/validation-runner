@@ -1,10 +1,17 @@
 from src.models import TestRun, TestStatus, validate_status_transition
 from src.store import TestRunStore
+from src.errors import ValidationError
+from src.config import CONFIG
 
 def health_check():
     return "ok"
 
 def create_test_run(name: str, test_type: str, store: TestRunStore) -> TestRun:
+    allowed_test_types = CONFIG["allowed_test_types"]
+
+    if test_type not in allowed_test_types:
+        raise ValidationError(f"Invalid test_type '{test_type}' in create_test_run")
+    
     return store.add_test_run(name, test_type)
 
 def run_test(test_run_id: int, passed: bool, store: TestRunStore) -> TestRun:
